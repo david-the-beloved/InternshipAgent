@@ -1,0 +1,83 @@
+# Great Internship Cold Emails — Examples for the Writer Agent
+# These teach the agent what "good" looks like.
+
+## Example 1 — Referencing a specific open-source project
+
+Subject: Your work on LangGraph's persistence layer
+
+Hi Sarah,
+
+I saw your commits on LangGraph's checkpoint system — the way you handled state serialization across async workflows was really elegant. I've been building a similar pattern for a side project using CrewAI.
+
+I'm a CS student at [University] graduating in 2027, and I'm looking for a summer internship focused on AI infrastructure. Your team's work on agent orchestration is exactly the area I want to grow in.
+
+Would you be open to a 15-minute chat about what your team looks for in interns? Happy to work around your schedule.
+
+Best,
+[Name]
+
+---
+
+## Example 2 — Referencing a conference talk
+
+Subject: Loved your PyCon talk on async patterns
+
+Hi Marcus,
+
+I watched your PyCon talk "Async All the Things" last week — your point about backpressure in event-driven microservices clicked something for me. I actually refactored my capstone project's message queue based on your approach.
+
+I'm actively looking for a software engineering internship for Summer 2026. The distributed systems work at [Company] really excites me, especially the real-time data pipeline your team ships.
+
+Would you have time for a quick coffee chat (virtual is great)? I'd love to hear about your team's internship experience.
+
+Thanks,
+[Name]
+
+---
+
+## Example 3 — Referencing a blog post
+
+Subject: Your post on building reliable ML pipelines
+
+Hi Priya,
+
+Your blog post about moving from notebooks to production ML pipelines really resonated — I hit the exact same pain points during my ML course project. Your suggestion about separating feature engineering from model training saved me a week of debugging.
+
+I'm a junior studying CS and AI, and I'm looking for an ML engineering internship this summer. [Company]'s approach to production ML is exactly where I want to learn.
+
+Any chance you'd be open to a brief chat? I'd love to learn more about what your team works on.
+
+Best,
+[Name]
+
+---
+
+## Example 4 — Referencing shared interests
+
+Subject: Fellow Rust enthusiast interested in [Company]
+
+Hi Alex,
+
+I noticed you've been active in the Rust community — your crate for zero-copy deserialization is something I've actually used in a systems project. The performance benchmarks you shared were incredibly helpful.
+
+I'm exploring summer internships in systems programming / infrastructure. [Company]'s work on [specific product] caught my eye, and seeing that you use Rust in production makes it even more exciting.
+
+Would you be willing to chat for 15 minutes about what it's like working on [specific team]? I'd really appreciate your perspective.
+
+Cheers,
+[Name]
+
+---
+
+## Example 5 — Short and direct
+
+Subject: Summer intern who loves your API design
+
+Hi Jamie,
+
+Quick note — I read your thread on API versioning strategies and it changed how I approach my side projects. Your "consumers-first" principle is now my default.
+
+I'm a CS student looking for a backend engineering internship at [Company] this summer. Would you be open to a short chat about your team? I promise to keep it under 15 minutes.
+
+Thanks,
+[Name]

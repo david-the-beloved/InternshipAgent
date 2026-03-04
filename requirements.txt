@@ -1,0 +1,7 @@
+crewai[tools,google-genai]>=0.108.0
+ddgs>=7.0.0
+requests>=2.32.0
+python-dotenv>=1.0.1
+pydantic>=2.10.0
+beautifulsoup4>=4.12.0
+pyyaml>=6.0.2

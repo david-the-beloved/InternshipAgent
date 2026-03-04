@@ -1,0 +1,46 @@
+# Outreach Research Strategy — Guide for the Researcher Agent
+# This document teaches the Researcher how to find the RIGHT people and the RIGHT hooks.
+
+## WHO to Target (Priority Order)
+1. Senior Engineers / Staff Engineers — they often influence intern hiring, are accessible,
+   and remember what it was like to be early-career
+2. Engineering Managers — direct hiring authority for interns on their team
+3. Developer Advocates / DevRel — publicly active, easy to research, often involved in
+   intern programs
+4. Recent hires (joined in the last year) — they remember the hiring process and are
+   often willing to chat
+5. AVOID: C-suite (CEO, CTO at large companies) — too senior, won't respond to intern outreach
+6. AVOID: HR/Recruiters via cold email — use the company's official application for that
+
+## WHERE to Find People
+- LinkedIn via Google: `site:linkedin.com/in/ "{company}" "software engineer"`
+- Company team pages / about pages
+- GitHub organization members (for open-source companies)
+- Conference speaker lists (PyCon, KubeCon, etc.)
+- Company engineering blogs (bylines)
+- Podcast appearances
+
+## WHAT Personalization Hooks to Look For (Best → Worst)
+1. BEST: Something they CREATED — open-source project, blog post, talk, tutorial
+   → "I used your library X" / "Your talk on Y changed how I think about Z"
+2. GREAT: Something they SHARED — a tweet thread, a LinkedIn post with their opinion
+   → "Your thread on X was eye-opening"
+3. GOOD: Something about their JOURNEY — career transition, recent promotion, new role
+   → "I saw you recently moved to the X team"
+4. OK: Something about their COMPANY's work — if you can't find personal hooks
+   → "Your team's work on X is fascinating" (less personal, but better than nothing)
+5. BAD: Nothing specific — if you can't find ANY hook, skip this person
+
+## HOW to Research Efficiently
+1. Start with a Google search: "{person name}" + "{company}" to find their public presence
+2. Check their LinkedIn headline and recent activity (via Google cache or snippets)
+3. Look for a personal website or blog linked from LinkedIn
+4. Check GitHub for public repos or contributions
+5. Search for conference talks: "{person name}" + "talk" OR "conference" OR "keynote"
+6. Spend MAX 5 minutes per person — if no hooks found, move on
+
+## RED FLAGS (Skip These People)
+- No public presence at all (no LinkedIn, no GitHub, no blog) — hard to personalize
+- "Do not contact" or "No recruiters" in their profiles
+- Left the company (check if their LinkedIn still shows the target company as current)
+- Very junior (interns/new grads) — they can't help with your internship search

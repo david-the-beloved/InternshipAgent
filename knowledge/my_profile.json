@@ -1,0 +1,48 @@
+{
+    "name": "David Ihegaranya",
+    "email": "dihegaranya@gmail.com",
+    "university": "Covenant University",
+    "graduation_year": "2027",
+    "degree": "B.Eng. Computer Engineering",
+    "target_role": "Software Engineering / AI Automation Intern",
+    "skills": [
+        "Python",
+        "AI/ML",
+        "Automation",
+        "LLMs",
+        "Agent frameworks (CrewAI, LangChain)",
+        "API development",
+        "Web scraping"
+    ],
+    "projects": [
+        {
+            "name": "AI Internship Outreach Agent",
+            "description": "Built a multi-agent system using CrewAI to automate personalized internship outreach with knowledge-equipped agents, memory, and human-in-the-loop review.",
+            "tech": ["Python", "CrewAI", "OpenAI", "DuckDuckGo API"]
+        },
+        {
+            "name": "AI Lead Qualification Agent",
+            "description": "Engineered an AI-driven lead tracking system that processes raw customer data and utilizes LLMs to autonomously evaluate and display \"buying readiness\".",
+            "tech": ["Python", "FastAPI", "Gemini", "LLMs", "PostgreSQL"]
+        },
+        {
+            "name": "intelligent Document Retrieval System (RAG Agent)",
+            "description": "Developed an AI-powered internal tool using Retrieval-Augmented Generation (RAG) to ingest PDF documentation and answer user queries with high accuracy.",
+            "tech": ["Python", "FastAPI", "Gemini", "LLMs", "ChromaDB", "Langchain", "Railway"]
+        }
+    ],
+    "links": {
+        "github": "https://github.com/david-the-beloved",
+        "linkedin": "https://linkedin.com/in/david-ihegaranya"
+    },
+    "interests": [
+        "AI agents and automation",
+        "Developer tools",
+        "Open-source software",
+        "Backend development"
+    ],
+    "fun_facts": [
+        "I enjoy reading and exploring emotions in humans, especially love"
+    ],
+    "looking_for": "A summer 2026 internship where I can build AI-powered tools, backend infrastructure, and learn from experienced engineers. I'm especially interested in teams working on LLM applications, developer tooling, or AI infrastructure."
+}

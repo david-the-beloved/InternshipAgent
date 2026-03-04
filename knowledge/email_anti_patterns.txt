@@ -1,0 +1,81 @@
+# Cold Email Anti-Patterns — What NOT to Do
+# These teach the Writer agent to avoid common mistakes.
+
+## Anti-Pattern 1: The Generic Template
+BAD:
+Subject: Internship Opportunity
+"Dear Hiring Manager, I am writing to express my interest in a software engineering
+internship at your esteemed company. I am a passionate and hardworking individual..."
+
+WHY IT'S BAD: No personalization, no specific reference to the person or company.
+Could be sent to literally anyone. Goes straight to trash.
+
+---
+
+## Anti-Pattern 2: The Novel
+BAD:
+"Hi, let me tell you about my entire life story, every project I've ever built,
+every course I've taken, my GPA, my extracurriculars, my volunteer work..."
+
+WHY IT'S BAD: Too long. Nobody reads a 500-word cold email. Keep it under 120 words.
+Respect their time.
+
+---
+
+## Anti-Pattern 3: The Buzzword Salad
+BAD:
+"I'm a passionate, results-driven, innovative self-starter with a growth mindset
+who thrives in fast-paced environments and loves to leverage synergies..."
+
+WHY IT'S BAD: Empty words that say nothing. Be specific about what you've done.
+
+---
+
+## Anti-Pattern 4: The Demand
+BAD:
+"I'd love to interview for a position on your team. When can we schedule a call?
+Please find my resume attached."
+
+WHY IT'S BAD: Too aggressive. You're asking a stranger for a favor — make a soft ask.
+"Would you be open to a 15-min chat?" not "When can we schedule an interview?"
+
+---
+
+## Anti-Pattern 5: The Fake Flattery
+BAD:
+"I've been following your amazing career and I'm such a huge fan of everything
+you've done. You're truly an inspiration to me."
+
+WHY IT'S BAD: Feels disingenuous unless backed by something specific. Always reference
+a SPECIFIC piece of their work, not vague admiration.
+
+---
+
+## Anti-Pattern 6: The Mass Blast
+BAD:
+"Hi [FIRST_NAME], I noticed you work at [COMPANY] as a [TITLE]..."
+
+WHY IT'S BAD: Obvious mail merge. The personalization tokens are visible even when
+filled in — the email still reads like a template. Weave the personal details
+naturally into the message.
+
+---
+
+## Anti-Pattern 7: Missing CAN-SPAM Compliance
+BAD: Any email without your real name, a way to opt out, or with a deceptive subject line.
+
+WHY IT'S BAD: It's literally illegal (up to $53,088 per email). Always include:
+- Your real full name
+- A line like "If you'd rather not hear from me, feel free to let me know"
+- Honest, non-clickbait subject line
+
+---
+
+## Key Rules for the Writer:
+1. ALWAYS reference something SPECIFIC about the recipient
+2. Keep under 150 words (120 ideal)
+3. Soft ask only ("Would you be open to..." not "When can we...")
+4. No buzzwords — concrete details only
+5. Sound like a real person, not a template
+6. Include CAN-SPAM footer (name + opt-out)
+7. Subject line must be specific and honest

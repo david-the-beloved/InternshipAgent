@@ -1,0 +1,202 @@
+{
+    "companies": [
+        {
+            "name": "Busha",
+            "domain": "busha.co",
+            "why": "They are a leading cryptocurrency exchange in Nigeria. My experience building a real-time crypto portfolio tracker and financial asset ledger directly aligns with their core infrastructure.",
+            "target_teams": ["Backend Engineering", "Core Infrastructure"],
+            "notes": "I have previously been in contact with Toni from their engineering team. I am fully willing to learn and work in Golang to fit their environment."
+        },
+        {
+            "name": "PiggyVest",
+            "domain": "piggyvest.com",
+            "why": "They handle massive volumes of micro-transactions and savings data, requiring strict data integrity similar to the financial asset ledger I architected.",
+            "target_teams": ["Backend Engineering", "Data Infrastructure"],
+            "notes": "[Specific internal AI projects cannot be verified] They are known for having one of the most robust and secure backend fintech architectures in Lagos."
+        },
+        {
+            "name": "Stears",
+            "domain": "stears.co",
+            "why": "They are a premier data and intelligence company. My deep interest in Retrieval-Augmented Generation (RAG) and data pipelines is highly relevant to how they process and categorize financial data.",
+            "target_teams": ["Data Engineering", "Data Science/AI"],
+            "notes": "They recently expanded their proprietary data platform. My AI lead qualification agent logic could be adapted for their data categorization workflows."
+        },
+        {
+            "name": "FairMoney",
+            "domain": "fairmoney.io",
+            "why": "They rely heavily on automated credit scoring and underwriting. My AI Lead Qualification Agent demonstrates my ability to build logic that autonomously scores user profiles.",
+            "target_teams": ["Backend Development", "Risk & Data Engineering"],
+            "notes": "[Specific LLM usage cannot be verified] Their entire lending business model is dependent on data-driven automation and risk scoring."
+        },
+        {
+            "name": "Carbon",
+            "domain": "getcarbon.co",
+            "why": "As pioneers in digital lending, they process massive datasets for loan decisions. My FastAPI and PostgreSQL skills align with their robust backend and data requirements.",
+            "target_teams": ["Backend Engineering", "Data Engineering"],
+            "notes": "[Exact current tech stack nuances cannot be verified] They handle high-frequency financial ledgers and automated credit decisions."
+        },
+        {
+            "name": "TradeDepot",
+            "domain": "tradedepot.co",
+            "why": "They manage B2B supply chains for consumer goods. The data integrity required for their logistics and inventory ledgers matches the architecture of my financial asset ledger.",
+            "target_teams": ["Backend Engineering", "Supply Chain Optimization"],
+            "notes": "[No specific open-source tools verified] They focus heavily on enterprise B2B APIs and large-scale data synchronization."
+        },
+        {
+            "name": "Lendsqr",
+            "domain": "lendsqr.com",
+            "why": "They build Lending-as-a-Service infrastructure. My ability to design secure database schemas for financial transactions is directly applicable to their core SaaS product.",
+            "target_teams": ["Backend Engineering", "API Platform"],
+            "notes": "Their CEO, Adedeji Olowe, is highly vocal about API standards and Open Banking in Nigeria, making API architecture a top priority for them."
+        },
+        {
+            "name": "Moove",
+            "domain": "moove.io",
+            "why": "They use alternative data to provide vehicle financing to mobility entrepreneurs. My AI scoring agent aligns perfectly with their automated risk assessment models.",
+            "target_teams": ["Backend Engineering", "Data Platform"],
+            "notes": "While they operate globally, they maintain a strong engineering data presence in Lagos for their African operations."
+        },
+        {
+            "name": "Autochek",
+            "domain": "autochek.africa",
+            "why": "They integrate auto loans, maintenance, and sales into one platform. The complex API integrations required for their loan engines suit my backend skillset.",
+            "target_teams": ["Backend Engineering", "Fintech Integrations"],
+            "notes": "[Specific open-source projects cannot be verified] They rely heavily on partner API integrations across multiple African countries."
+        },
+        {
+            "name": "Intron Health",
+            "domain": "intron.health",
+            "why": "They are building clinical speech recognition AI specifically for African accents. My background in AI automation and Python makes me a strong fit for their deep-tech AI team.",
+            "target_teams": ["AI/Machine Learning", "Backend Engineering"],
+            "notes": "They are one of the few deep-tech startups in Nigeria actively training specialized AI models rather than just wrapping OpenAI APIs."
+        },
+        {
+            "name": "Bankly",
+            "domain": "bankly.ng",
+            "why": "They digitize cash for the unbanked, requiring strict ledger systems to prevent fraud, which is exactly what my crypto portfolio database architecture demonstrates.",
+            "target_teams": ["Backend Engineering", "Fraud & Risk Data"],
+            "notes": "[Specific internal tools cannot be verified] Their core focus is on high-availability financial APIs for their agent network."
+        },
+        {
+            "name": "OPay",
+            "domain": "opayweb.com",
+            "why": "Their transaction volume is immense, requiring extreme backend optimization and database management, playing directly into my PostgreSQL and Python performance strengths.",
+            "target_teams": ["Backend Engineering", "Core Banking API"],
+            "notes": "[Engineering teams are highly distributed globally] They heavily recruit locally in Lagos for localized API integrations and infrastructure maintenance."
+        },
+        {
+            "name": "V Bank (VFD Group)",
+            "domain": "vbank.ng",
+            "why": "As a digital-only bank, their entire operation is API-driven. My financial ledger project shows I understand the underlying backend architecture of digital wallets.",
+            "target_teams": ["Backend Engineering", "Digital Banking Platform"],
+            "notes": "[Specific internal AI projects cannot be verified] They are highly focused on scaling consumer banking APIs and third-party integrations."
+        },
+        {
+            "name": "Kobo360",
+            "domain": "kobo360.com",
+            "why": "They handle massive e-logistics data pipelines and complex routing logic. My experience with Python, PostgreSQL, and handling real-time data flow directly aligns with their backend needs.",
+            "target_teams": ["Backend Engineering", "Logistics Data Platform"],
+            "notes": "[Specific internal tech stack nuances cannot be verified] They focus heavily on high-availability enterprise logistics APIs."
+        },
+        {
+            "name": "GIG Logistics (GIGL)",
+            "domain": "giglogistics.com",
+            "why": "They have a massive internal tech team building enterprise logistics and tracking APIs, matching my FastAPI and data routing capabilities.",
+            "target_teams": ["Core Tech", "Backend Engineering"],
+            "notes": "[Specific open-source tools cannot be verified] They heavily build proprietary enterprise software in-house rather than outsourcing."
+        },
+        {
+            "name": "Shuttlers",
+            "domain": "shuttlers.africa",
+            "why": "Their mobility tech requires complex scheduling, payment routing, and real-time tracking—perfect for my backend and database schema design skills.",
+            "target_teams": ["Backend Engineering", "Platform Infrastructure"],
+            "notes": "[Internal LLM usage cannot be verified] Their operations rely heavily on real-time data synchronization."
+        },
+        {
+            "name": "Sendbox",
+            "domain": "sendbox.co",
+            "why": "Their e-commerce fulfillment requires heavy API integrations with external merchants (Shopify, Instagram). This fits perfectly with my FastAPI and API integration experience.",
+            "target_teams": ["API Integrations", "Backend Engineering"],
+            "notes": "[Specific internal open-source tools cannot be verified]"
+        },
+        {
+            "name": "Terminal Africa",
+            "domain": "terminal.africa",
+            "why": "They build API-heavy software for logistics businesses. My experience with secure API routing and data integrity is highly relevant to their core product.",
+            "target_teams": ["Backend Engineering", "Core API"],
+            "notes": "[Specific open-source tools cannot be verified] They are constantly shipping new logistics and shipping provider integrations."
+        },
+        {
+            "name": "Helium Health",
+            "domain": "heliumhealth.com",
+            "why": "As the largest EMR provider in West Africa, they require extreme data security and strict schema design. This matches my experience building secure financial ledgers with PostgreSQL.",
+            "target_teams": ["Backend Engineering", "Data Security"],
+            "notes": "[Specific internal AI projects cannot be verified] They have a massive engineering team with strict HIPAA-style compliance requirements."
+        },
+        {
+            "name": "Reliance HMO",
+            "domain": "reliancehmo.com",
+            "why": "They process thousands of health insurance claims. The logic behind my AI Lead Tracker can be applied to automating their backend claim evaluation workflows.",
+            "target_teams": ["Backend Engineering", "Workflow Automation"],
+            "notes": "[Exact internal tech stack cannot be verified] They focus heavily on automated health tech operations and digitized claims."
+        },
+        {
+            "name": "Remedial Health",
+            "domain": "remedial.health",
+            "why": "They manage supply chain and fintech for pharmacies. This requires fast, secure transaction processing, directly aligning with my real-time financial asset ledger project.",
+            "target_teams": ["Backend Engineering", "Supply Chain Data"],
+            "notes": "[Specific open-source tools cannot be verified]"
+        },
+        {
+            "name": "LifeBank",
+            "domain": "lifebank.ng",
+            "why": "Their medical logistics combine routing and healthcare data. My Python/PostgreSQL backend skills fit their need for absolute data precision.",
+            "target_teams": ["Backend Engineering", "Logistics Infrastructure"],
+            "notes": "[Internal open-source tools cannot be verified]"
+        },
+        {
+            "name": "Spleet",
+            "domain": "spleet.africa",
+            "why": "They handle user wallets, automated billing, and risk assessment for property rentals. My AI automation agent and financial ledger projects are perfectly aligned here.",
+            "target_teams": ["Backend Engineering", "FinTech/Payments"],
+            "notes": "[Specific internal LLM usage cannot be verified] Operations blend fintech infrastructure with property management."
+        },
+        {
+            "name": "Zone",
+            "domain": "zone.africa",
+            "why": "As a regulated blockchain network for payments, my experience building a real-time crypto portfolio ledger makes me an immediate culture and technical fit.",
+            "target_teams": ["Core Blockchain Engineering", "Backend Infrastructure"],
+            "notes": "[Domain noted as zone.africa, formerly Appzone] They transitioned to a pure Web3/blockchain payment infrastructure."
+        },
+        {
+            "name": "Yellow Card",
+            "domain": "yellowcard.io",
+            "why": "They are a pan-African cryptocurrency exchange. My real-time crypto portfolio tracker is a direct 1-to-1 match for their digital asset infrastructure requirements.",
+            "target_teams": ["Backend Engineering", "Crypto/Web3 Data"],
+            "notes": "[Specific internal tech nuances cannot be verified]"
+        },
+        {
+            "name": "Terragon Group",
+            "domain": "terragongroup.com",
+            "why": "They are a massive data and marketing tech company. My AI Lead Qualification Agent is exactly the type of technology they build to help businesses monetize consumer data.",
+            "target_teams": ["Data Engineering", "AI/Machine Learning"],
+            "notes": "[Specific open-source tools cannot be verified] They are one of the largest data science and martech employers in Lagos."
+        },
+        {
+            "name": "Venture Garden Group",
+            "domain": "venturegardengroup.com",
+            "why": "They scale multiple fintech and data startups. Their massive, structured engineering hub is perfect for my enterprise backend and automation skills.",
+            "target_teams": ["Core Engineering", "Enterprise Software"],
+            "notes": "[Current internal AI initiatives cannot be verified] They incubate various B2B and B2G platforms."
+        },
+        {
+            "name": "Softcom",
+            "domain": "softcom.xyz",
+            "why": "They build enterprise identity and payment infrastructure (like Eyowo). My financial ledger architecture matches their backend precision requirements.",
+            "target_teams": ["Backend Engineering", "Core Infrastructure"],
+            "notes": "[Specific open-source contributions cannot be verified]"
+        }
+    ]
+,
+    "_instructions": "Replace the example above with real companies. Add as many as you want. The 'why' field is critical — it feeds the Writer agent so emails mention genuine reasons for your interest. The 'domain' field is used by the Email Finder to search for emails."
+}

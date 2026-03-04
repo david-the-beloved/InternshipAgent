@@ -1,0 +1,52 @@
+# CAN-SPAM Compliance Rules (Federal Trade Commission)
+# EVERY outgoing email MUST comply with these rules.
+# Violations carry penalties of up to $53,088 PER email.
+
+## The 8 Requirements:
+
+1. NO FALSE OR MISLEADING HEADERS
+   The "From", "To", "Reply-To", and routing information must be accurate
+   and identify the person who initiated the message.
+
+2. NO DECEPTIVE SUBJECT LINES
+   The subject line must accurately reflect the content of the email.
+   Do NOT use clickbait, misleading urgency, or fake "Re:" prefixes.
+
+3. IDENTIFY THE MESSAGE AS AN AD (if applicable)
+   For internship outreach, this is less strict since you're not selling
+   a product, but be transparent about your intent.
+
+4. INCLUDE YOUR PHYSICAL POSTAL ADDRESS
+   For personal outreach, your city and state are often sufficient.
+   (Note: for an internship cold email, including your university name
+   and location is generally acceptable.)
+
+5. PROVIDE AN OPT-OUT MECHANISM
+   Every email must include a clear way for the recipient to stop
+   receiving emails. For cold outreach, a simple line like:
+   "If you'd prefer not to receive emails from me, just reply 'unsubscribe'
+   and I'll remove you from my list immediately."
+
+6. HONOR OPT-OUTS WITHIN 10 BUSINESS DAYS
+   If someone asks to stop receiving emails, you MUST stop.
+   Our system tracks this in the database (status = 'opted_out').
+
+7. MONITOR WHAT IS DONE ON YOUR BEHALF
+   Since the AI agent sends emails on your behalf, YOU are responsible
+   for ensuring compliance. Always review emails before sending.
+
+8. EACH EMAIL MUST CONTAIN:
+   - Your real full name
+   - Your university / affiliation
+   - An opt-out line
+   - An honest subject line
+   - Accurate sender information
+
+## Email Footer Template:
+---
+[Your Full Name]
+[University] — [Degree, Expected Graduation Year]
+[GitHub] | [Portfolio]
+
+If you'd rather not hear from me, just let me know and I'll remove you
+from my list right away.
