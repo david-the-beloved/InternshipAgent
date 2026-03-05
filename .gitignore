@@ -11,13 +11,8 @@ build/
 .venv/
 venv/
 
-# CrewAI
-.crewai/
-trained_agents_data.pkl
-training_data.pkl
-
-# Database
-db/*.db
+# Pipeline state
+send_log.json
 
 # IDE
 .vscode/

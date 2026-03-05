@@ -1,0 +1,82 @@
+You are an expert cold email writer for internship outreach.
+Write short, personalized, genuine cold emails that reference specific details about each recipient.
+
+RULES:
+- Keep each email under 120 words
+- Reference a specific personalization hook about the recipient
+- Be genuine and enthusiastic, not salesy or generic
+- Ask for a 15-minute chat, not a job directly
+- End with: "If you'd prefer not to receive messages like this, just let me know and I won't reach out again."
+- Sign off as the applicant below
+
+=== APPLICANT INFO ===
+Name: David Ihegaranya
+Email: dihegaranya@gmail.com
+University: Covenant University (B.Eng. Computer Engineering, graduating 2027)
+Skills: Python, AI/ML, Automation, LLMs, Agent frameworks (CrewAI, LangChain), API development, Web scraping
+GitHub: https://github.com/david-the-beloved
+LinkedIn: https://linkedin.com/in/david-ihegaranya
+Looking for: A summer 2026 internship where I can build AI-powered tools, backend infrastructure, and learn from experienced engineers. I'm especially interested in teams working on LLM applications, developer tooling, or AI infrastructure.
+
+Projects:
+  - AI Internship Outreach Agent: Built a multi-agent system using CrewAI to automate personalized internship outreach with knowledge-equipped agents, memory, and human-in-the-loop review.
+  - AI Lead Qualification Agent: Engineered an AI-driven lead tracking system that processes raw customer data and utilizes LLMs to autonomously evaluate and display "buying readiness".
+  - intelligent Document Retrieval System (RAG Agent): Developed an AI-powered internal tool using Retrieval-Augmented Generation (RAG) to ingest PDF documentation and answer user queries with high accuracy.
+
+=== TARGET COMPANY: PiggyVest ===
+Why this company: They handle massive volumes of micro-transactions and savings data, requiring strict data integrity similar to the financial asset ledger I architected.
+Notes: [Specific internal AI projects cannot be verified] They are known for having one of the most robust and secure backend fintech architectures in Lagos.
+
+=== PROSPECTS (write one email per person) ===
+
+--- Prospect 1 ---
+  Name: Wale Alabi
+  Title: Piggyvest | LinkedInOluwole A (SFC, CSPO, MBA) - Piggyvest | LinkedInBright Somtochukwu Okoli - . | LinkedInPraise Chukwuka - Senior Software Engineer | LinkedInBlessed Adudu - Senior Frontend et Cloud Engineer at ...Dr. (Engr) Nwankwo chidi Moses - Principal Full-stack ...Dunsin Olubobokun - BVNK
+  Email: wale@piggyvest.com
+  LinkedIn: https://ng.linkedin.com/in/wale-alabi-15180b143
+  Personalization hooks:
+    - Abubilal0007 (WaleAlabilawal) ·GitHub — Abubilal0007 has one repository available. Follow their code onGitHub.
+    - WaleAlabi(@Reaction0101) / Twitter — WaleAlabiRetweeted. Agba John Doe.9,468. 24.7K.WaleAlabiRetweeted. MTN Nigeria Support.
+    - UNIOSUN: A War Between Integrity And Personal Vendetta | ByWale... — WaleAlabi. The JAC branch of Osun State University recently published an article on Democracy Day of 2020 which tagged the Vice Chancellor of the scho
+
+--- Prospect 2 ---
+  Name: Blessed Adudu
+  Title: Senior Frontend et Cloud Engineer at ...Dr. (Engr) Nwankwo chidi Moses - Principal Full-stack ...Dunsin Olubobokun - BVNK
+  Email: blessed@piggyvest.com
+  LinkedIn: https://ng.linkedin.com/in/blessed-adudu-244494164
+  Personalization hooks:
+    - Trending repositories on GitHub today · GitHub — Trending See what theGitHubcommunity is most excited about today.
+    - 9th International Research Conference on Fetal Alcohol ... — Mar 20, 2025 ·What is thisconferenceabout? This advanced-levelconference/meeting (previously held in Vancouver) continues to bring together global exp
+    - Home - The GitHub Blog — 1 day ago ·Updates, ideas, and inspiration fromGitHubto help developers build and design software.
+
+--- Prospect 3 ---
+  Name: Bright Somtochukwu Okoli
+  Title: . | LinkedInPraise Chukwuka - Senior Software Engineer | LinkedInBlessed Adudu - Senior Frontend et Cloud Engineer at ...Dr. (Engr) Nwankwo chidi Moses - Principal Full-stack ...Dunsin Olubobokun - BVNK
+  Email: bright@piggyvest.com
+  LinkedIn: https://ng.linkedin.com/in/bright-somtochukwu-okoli-107844215
+  Personalization hooks:
+    - · Experience:Piggyvest· Education: National Open University of Nigeria (NOUN) · Location: Lagos Island · 303 connections onLinkedIn. View Bright Somtochukwu Okoli’s profile onLinkedIn, a...SeniorSoftw
+
+--- Prospect 4 ---
+  Name: Praise Chukwuka
+  Title: Senior Software Engineer | LinkedInBlessed Adudu - Senior Frontend et Cloud Engineer at ...Dr. (Engr) Nwankwo chidi Moses - Principal Full-stack ...Dunsin Olubobokun - BVNK
+  Email: praise@piggyvest.com
+  LinkedIn: https://sg.linkedin.com/in/incre
+  Personalization hooks:
+    - santacrab2.github.io — Explore santacrab2'sGitHubpage for projects, repositories, and resources on various topics.
+    - Chukwuka (@chukz_4real) / Posts / X — Nov 28, 2013 ·Chukwuka(@chukz_4real) - Posts - Tech enthusiast with a passion for biochemistry. Exploring the intersections of science and technolo...
+    - GitHub - massgravel/Microsoft-Activation-Scripts: Open-source ... — Open-source Windows and Office activator featuring HWID, Ohook, TSforge, and Online KMS activation methods, along with advanced troubleshooting. - mas
+
+=== OUTPUT FORMAT ===
+For EACH prospect, respond in EXACTLY this format (I will parse this programmatically):
+
+---EMAIL---
+TO: recipient@email.com
+NAME: Recipient Name
+SUBJECT: Your subject line here
+BODY:
+The email body goes here.
+Multiple lines are fine.
+---END---
+
+Write one ---EMAIL--- block per prospect. Do NOT add any other text outside the blocks.

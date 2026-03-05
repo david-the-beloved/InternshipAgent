@@ -1,0 +1,301 @@
+{
+  "name": "Internship Outreach — Full Pipeline",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Start: Research Next Company",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 200],
+      "notes": "Click 'Execute Workflow' to research the next pending company."
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "minutes", "minutesInterval": 30 }]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule: Check for Ready Drafts",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 600],
+      "notes": "Every 30 min, checks if any drafts/{company}_drafts.txt has EMAIL blocks to send."
+    },
+
+    {
+      "parameters": {
+        "jsCode": "// Read progress.json and find the next company that hasn't been completed\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst PROGRESS = path.join(BASE, 'progress.json');\nconst COMPANIES = path.join(BASE, 'knowledge/target_companies.json');\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(fs.readFileSync(PROGRESS, 'utf-8')); } catch(e) {}\n\nlet companies = [];\ntry { companies = JSON.parse(fs.readFileSync(COMPANIES, 'utf-8')).companies || []; } catch(e) {}\n\nconst next = companies.find(c => !progress.completed.includes(c.name));\n\nif (!next) {\n  return [{ json: { done: true, message: `All ${companies.length} companies completed! 🎉`, total: companies.length, completed: progress.completed.length } }];\n}\n\nconst slug = next.name.toLowerCase().replace(/ /g, '_');\nconst doneCount = progress.completed.length;\n\nreturn [{ json: {\n  done: false,\n  company: next.name,\n  domain: next.domain,\n  slug,\n  progress: `${doneCount}/${companies.length}`,\n  doneCount,\n  total: companies.length\n} }];"
+      },
+      "id": "code-next-company",
+      "name": "Get Next Company",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [{
+            "id": "not-done",
+            "leftValue": "={{ $json.done }}",
+            "rightValue": false,
+            "operator": { "type": "boolean", "operation": "equals" }
+          }],
+          "combinator": "and"
+        }
+      },
+      "id": "if-has-more",
+      "name": "More Companies?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [700, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const { exec } = require('child_process');\nconst company = $input.first().json.company;\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst py = `\"${BASE}/venv/Scripts/python.exe\"`;\nconst cmd = `set PYTHONIOENCODING=utf-8 && cd \"${BASE}\" && ${py} pipeline.py research --company \"${company}\"`;\nreturn new Promise((resolve) => {\n  exec(cmd, { encoding: 'utf-8', timeout: 300000, maxBuffer: 10 * 1024 * 1024 }, (error, stdout, stderr) => {\n    if (error) {\n      resolve([{ json: { company, status: 'error', output: stderr || error.message } }]);\n    } else {\n      resolve([{ json: { company, status: 'ok', output: stdout } }]);\n    }\n  });\n});"
+      },
+      "id": "exec-research",
+      "name": "Run: Research Pipeline",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [940, 100],
+      "notes": "Runs DuckDuckGo search + Hunter.io email finding + verification + prompt generation. Takes 2-3 minutes."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "" },
+          "conditions": [{
+            "leftValue": "={{ $json.status }}",
+            "rightValue": "ok",
+            "operator": { "type": "string", "operation": "equals" }
+          }],
+          "combinator": "and"
+        }
+      },
+      "id": "if-emails-found",
+      "name": "Emails Found?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1060, 100],
+      "notes": "Routes to Read Prompt if research succeeded (status=ok), otherwise skips company."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log that this company was skipped due to no valid emails\nconst company = $input.first().json.company || 'unknown';\nconst output = $input.first().json.output || '';\nconsole.log(`Skipped ${company}: no valid emails found`);\nreturn [{ json: { company, skipped: true, reason: 'no_valid_emails', detail: output } }];"
+      },
+      "id": "code-log-skipped-company",
+      "name": "Log Skipped Company",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1180, 300],
+      "notes": "Company had no valid emails. Pipeline already marked it completed. Loops back to research the next company."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Read the generated prompt file\nconst fs = require('fs');\nconst path = require('path');\n\nconst company = $('Get Next Company').first().json.company;\nconst slug = $('Get Next Company').first().json.slug;\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\n\nconst promptPath = path.join(BASE, 'drafts', `${slug}_prompt.txt`);\nconst dataPath = path.join(BASE, 'drafts', `${slug}_data.json`);\n\nlet prompt = '';\nlet prospects = [];\n\ntry { prompt = fs.readFileSync(promptPath, 'utf-8'); } catch(e) { prompt = 'ERROR: Could not read prompt file'; }\ntry { prospects = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); } catch(e) {}\n\nconst prospectSummary = prospects.map((p, i) =>\n  `${i+1}. ${p.name} (${p.title}) — ${p.email} [${p.email_confidence}%]`\n).join('\\n');\n\nreturn [{ json: {\n  company,\n  slug,\n  prompt,\n  prospectCount: prospects.length,\n  prospectSummary,\n  draftsFile: `drafts/${slug}_drafts.txt`\n} }];"
+      },
+      "id": "code-read-prompt",
+      "name": "Read Prompt File",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 100]
+    },
+
+    {
+      "parameters": {
+        "jsCode": "// Mark company as researched in progress.json\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst PROGRESS = path.join(BASE, 'progress.json');\n\nconst company = $('Get Next Company').first().json.company;\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(fs.readFileSync(PROGRESS, 'utf-8')); } catch(e) {}\n\nif (!progress.researched.includes(company)) {\n  progress.researched.push(company);\n}\nprogress.current = company;\n\nfs.writeFileSync(PROGRESS, JSON.stringify(progress, null, 2));\n\nreturn [{ json: {\n  status: 'researched',\n  company,\n  promptFile: `drafts/${company.toLowerCase().replace(/ /g, '_')}_prompt.txt`,\n  draftsFile: `drafts/${company.toLowerCase().replace(/ /g, '_')}_drafts.txt`,\n  message: `✓ Research done for ${company}. Open the prompt file, paste into Gemini, then save reply to drafts file.`,\n  progress: $('Get Next Company').first().json.progress\n} }];"
+      },
+      "id": "code-mark-researched",
+      "name": "Mark as Researched",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1540, 100]
+    },
+
+    {
+      "parameters": {
+        "jsCode": "// Check drafts folder and pick only ONE safe company per schedule cycle\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst DRAFTS = path.join(BASE, 'drafts');\nconst PROGRESS = path.join(BASE, 'progress.json');\nconst SEND_LOG = path.join(BASE, 'send_log.json');\nconst MAX_PER_DAY = 18;\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(fs.readFileSync(PROGRESS, 'utf-8')); } catch(e) {}\n\nlet sendLog = { today: '', sent_today: 0, all_recipients: [] };\ntry { sendLog = JSON.parse(fs.readFileSync(SEND_LOG, 'utf-8')); } catch(e) {}\n\nconst today = new Date().toISOString().split('T')[0];\nif (sendLog.today !== today) {\n  sendLog.today = today;\n  sendLog.sent_today = 0;\n  try { fs.writeFileSync(SEND_LOG, JSON.stringify(sendLog, null, 2)); } catch(e) {}\n}\n\nconst remainingBudget = MAX_PER_DAY - (sendLog.sent_today || 0);\nif (remainingBudget <= 0) {\n  return [{ json: { hasReady: false, message: `Daily limit reached (${sendLog.sent_today}/${MAX_PER_DAY}). Waiting until tomorrow.` } }];\n}\n\nconst knownRecipients = new Set((sendLog.all_recipients || []).map(e => String(e).toLowerCase()));\n\nfor (const company of (progress.researched || [])) {\n  const slug = company.toLowerCase().replace(/ /g, '_');\n  const draftsPath = path.join(DRAFTS, `${slug}_drafts.txt`);\n\n  let content = '';\n  try {\n    content = fs.readFileSync(draftsPath, 'utf-8');\n  } catch(e) {\n    continue;\n  }\n\n  if (!content.includes('---EMAIL---')) continue;\n\n  const blocks = content.split(/---\\s*EMAIL\\s*---/i).filter(b => b.trim());\n  let hasAddress = false;\n  let hasUnsents = false;\n\n  for (const block of blocks) {\n    const cleaned = block.replace(/---\\s*END\\s*---.*/is, '').trim();\n    if (!cleaned) continue;\n    const toMatch = cleaned.match(/^TO:\\s*(.+)$/im);\n    if (!toMatch) continue;\n\n    const email = toMatch[1].trim().toLowerCase();\n    if (!email || !email.includes('@')) continue;\n\n    hasAddress = true;\n    if (!knownRecipients.has(email)) {\n      hasUnsents = true;\n      break;\n    }\n  }\n\n  if (hasUnsents) {\n    return [{ json: { company, slug, draftsContent: content, remainingBudget, hasReady: true } }];\n  }\n\n  if (hasAddress) {\n    const sentPath = path.join(DRAFTS, `${slug}_drafts_sent.txt`);\n    try { fs.renameSync(draftsPath, sentPath); } catch(e) {}\n\n    if (!progress.completed.includes(company)) {\n      progress.completed.push(company);\n    }\n    progress.researched = (progress.researched || []).filter(c => c !== company);\n    if (progress.current === company) progress.current = null;\n\n    try { fs.writeFileSync(PROGRESS, JSON.stringify(progress, null, 2)); } catch(e) {}\n  }\n}\n\nreturn [{ json: { hasReady: false, message: 'No new unsent drafts ready yet. Waiting for Gemini replies...' } }];"
+      },
+      "id": "code-check-drafts",
+      "name": "Check for Ready Drafts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 600]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [{
+            "id": "has-ready",
+            "leftValue": "={{ $json.hasReady }}",
+            "rightValue": true,
+            "operator": { "type": "boolean", "operation": "equals" }
+          }],
+          "combinator": "and"
+        }
+      },
+      "id": "if-drafts-ready",
+      "name": "Drafts Ready?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [720, 600]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse EMAIL blocks, enforce budget, and pre-filter duplicate recipients\nconst fs = require('fs');\nconst path = require('path');\n\nconst content = $json.draftsContent || '';\nconst company = $json.company;\nconst slug = $json.slug;\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst SEND_LOG = path.join(BASE, 'send_log.json');\nconst MAX_PER_DAY = 18;\n\nlet sendLog = { today: '', sent_today: 0, all_recipients: [] };\ntry { sendLog = JSON.parse(fs.readFileSync(SEND_LOG, 'utf-8')); } catch(e) {}\n\nconst today = new Date().toISOString().split('T')[0];\nif (sendLog.today !== today) {\n  sendLog.today = today;\n  sendLog.sent_today = 0;\n}\n\nlet remainingBudget = Number($json.remainingBudget ?? (MAX_PER_DAY - (sendLog.sent_today || 0)));\nif (!Number.isFinite(remainingBudget)) remainingBudget = 0;\nif (remainingBudget <= 0) {\n  return [{ json: { skip: true, company, message: 'Daily send budget exhausted for today.' } }];\n}\n\nconst knownRecipients = new Set((sendLog.all_recipients || []).map(e => String(e).toLowerCase()));\nconst batchRecipients = new Set();\nconst blocks = content.split(/---\\s*EMAIL\\s*---/i).filter(b => b.trim());\nconst emails = [];\n\nfor (const block of blocks) {\n  if (emails.length >= remainingBudget) break;\n\n  const cleaned = block.replace(/---\\s*END\\s*---.*/is, '').trim();\n  if (!cleaned) continue;\n\n  const toMatch = cleaned.match(/^TO:\\s*(.+)$/im);\n  const nameMatch = cleaned.match(/^NAME:\\s*(.+)$/im);\n  const subjectMatch = cleaned.match(/^SUBJECT:\\s*(.+)$/im);\n  const bodyMatch = cleaned.match(/^BODY:\\s*\\n([\\s\\S]*)/im);\n\n  if (!toMatch || !subjectMatch || !bodyMatch) continue;\n\n  const toEmail = toMatch[1].trim();\n  const toEmailLower = toEmail.toLowerCase();\n  if (!toEmail.includes('@')) continue;\n  if (knownRecipients.has(toEmailLower)) continue;\n  if (batchRecipients.has(toEmailLower)) continue;\n\n  batchRecipients.add(toEmailLower);\n  emails.push({\n    company, slug,\n    to_email: toEmail,\n    to_name: nameMatch ? nameMatch[1].trim() : '',\n    subject: subjectMatch[1].trim(),\n    body: bodyMatch[1].trim(),\n    skip: false\n  });\n}\n\nif (emails.length === 0) {\n  return [{ json: { skip: true, company, message: 'No new unsent EMAIL blocks after duplicate/budget filtering.' } }];\n}\n\nreturn emails.map(e => ({ json: e }));"
+      },
+      "id": "code-parse-emails",
+      "name": "Parse Email Blocks",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [{
+            "id": "has-at",
+            "leftValue": "={{ $json.to_email }}",
+            "rightValue": "@",
+            "operator": { "type": "string", "operation": "contains" }
+          }],
+          "combinator": "and"
+        }
+      },
+      "id": "if-valid-email",
+      "name": "Valid Email Address?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1200, 500]
+    },
+    {
+      "parameters": {
+        "fromEmail": "David Ihegaranya <dihegaranya@gmail.com>",
+        "toEmail": "={{ $json.to_email }}",
+        "subject": "={{ $json.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "gmail-send-email",
+      "name": "Send Email: Outreach",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1440, 400],
+      "credentials": {
+        "smtp": {
+          "id": "REPLACE_WITH_SMTP_CREDENTIAL_ID",
+          "name": "SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "wait-30s",
+      "name": "Wait 30s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1660, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// After EACH successful send, update send_log + progress safely\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst DRAFTS = path.join(BASE, 'drafts');\nconst PROGRESS = path.join(BASE, 'progress.json');\nconst SEND_LOG = path.join(BASE, 'send_log.json');\n\nconst item = $input.first().json || {};\nconst company = item.company || '';\nconst toEmail = String(item.to_email || '').toLowerCase();\n\nif (!company || !toEmail.includes('@')) {\n  return [{ json: { status: 'skipped', message: 'No valid sent-email context.' } }];\n}\n\nlet sendLog = { today: '', sent_today: 0, all_recipients: [] };\ntry { sendLog = JSON.parse(fs.readFileSync(SEND_LOG, 'utf-8')); } catch(e) {}\nconst today = new Date().toISOString().split('T')[0];\nif (sendLog.today !== today) {\n  sendLog.today = today;\n  sendLog.sent_today = 0;\n}\nsendLog.sent_today += 1;\nif (!sendLog.all_recipients.includes(toEmail)) {\n  sendLog.all_recipients.push(toEmail);\n}\nfs.writeFileSync(SEND_LOG, JSON.stringify(sendLog, null, 2));\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(fs.readFileSync(PROGRESS, 'utf-8')); } catch(e) {}\nif (!progress.completed.includes(company)) {\n  progress.completed.push(company);\n}\nprogress.researched = (progress.researched || []).filter(c => c !== company);\nif (progress.current === company) progress.current = null;\nfs.writeFileSync(PROGRESS, JSON.stringify(progress, null, 2));\n\nconst slug = company.toLowerCase().replace(/ /g, '_');\nconst src = path.join(DRAFTS, `${slug}_drafts.txt`);\nconst dst = path.join(DRAFTS, `${slug}_drafts_sent.txt`);\ntry { fs.renameSync(src, dst); } catch(e) {}\n\nconst COMPANIES_FILE = path.join(BASE, 'knowledge/target_companies.json');\nlet total = 0;\ntry { total = JSON.parse(fs.readFileSync(COMPANIES_FILE, 'utf-8')).companies.length; } catch(e) {}\n\nreturn [{ json: {\n  status: 'sent',\n  companies_done: [company],\n  emails_sent: 1,\n  total_completed: progress.completed.length,\n  total_companies: total,\n  remaining: total - progress.completed.length,\n  daily_sent: sendLog.sent_today,\n  message: `Sent 1 email to ${toEmail} for ${company}. ${progress.completed.length}/${total} done. (${sendLog.sent_today}/18 daily limit)`\n} }];"
+      },
+      "id": "code-mark-done",
+      "name": "Mark Company Done",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1900, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log skipped emails\nconst item = $input.first().json;\nreturn [{ json: { status: 'skipped', name: item.to_name, company: item.company, reason: 'no valid email' } }];"
+      },
+      "id": "code-log-skip",
+      "name": "Log Skipped",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1440, 640]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { status: 'all_done', message: '🎉 All companies completed!' } }];"
+      },
+      "id": "code-all-done",
+      "name": "All Done!",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [940, 300]
+    }
+  ],
+  "connections": {
+    "Start: Research Next Company": {
+      "main": [[{ "node": "Get Next Company", "type": "main", "index": 0 }]]
+    },
+    "Get Next Company": {
+      "main": [[{ "node": "More Companies?", "type": "main", "index": 0 }]]
+    },
+    "More Companies?": {
+      "main": [
+        [{ "node": "Run: Research Pipeline", "type": "main", "index": 0 }],
+        [{ "node": "All Done!", "type": "main", "index": 0 }]
+      ]
+    },
+    "Run: Research Pipeline": {
+      "main": [[{ "node": "Emails Found?", "type": "main", "index": 0 }]]
+    },
+    "Emails Found?": {
+      "main": [
+        [{ "node": "Read Prompt File", "type": "main", "index": 0 }],
+        [{ "node": "Log Skipped Company", "type": "main", "index": 0 }]
+      ]
+    },
+    "Read Prompt File": {
+      "main": [[{ "node": "Mark as Researched", "type": "main", "index": 0 }]]
+    },
+    "Log Skipped Company": {
+      "main": [[{ "node": "Start: Research Next Company", "type": "main", "index": 0 }]]
+    },
+
+    "Schedule: Check for Ready Drafts": {
+      "main": [[{ "node": "Check for Ready Drafts", "type": "main", "index": 0 }]]
+    },
+    "Check for Ready Drafts": {
+      "main": [[{ "node": "Drafts Ready?", "type": "main", "index": 0 }]]
+    },
+    "Drafts Ready?": {
+      "main": [
+        [{ "node": "Parse Email Blocks", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Parse Email Blocks": {
+      "main": [[{ "node": "Valid Email Address?", "type": "main", "index": 0 }]]
+    },
+    "Valid Email Address?": {
+      "main": [
+        [{ "node": "Send Email: Outreach", "type": "main", "index": 0 }],
+        [{ "node": "Log Skipped", "type": "main", "index": 0 }]
+      ]
+    },
+    "Send Email: Outreach": {
+      "main": [[{ "node": "Wait 30s", "type": "main", "index": 0 }]]
+    },
+    "Wait 30s": {
+      "main": [[{ "node": "Mark Company Done", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": [{ "name": "internship-outreach" }]
+}

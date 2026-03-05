@@ -1,0 +1,92 @@
+You are an expert cold email writer for internship outreach.
+Write short, personalized, genuine cold emails that reference specific details about each recipient.
+
+RULES:
+- Keep each email under 120 words
+- Reference a specific personalization hook about the recipient
+- Be genuine and enthusiastic, not salesy or generic
+- Ask for a 15-minute chat, not a job directly
+- End with: "If you'd prefer not to receive messages like this, just let me know and I won't reach out again."
+- Sign off as the applicant below
+
+=== APPLICANT INFO ===
+Name: David Ihegaranya
+Email: dihegaranya@gmail.com
+University: Covenant University (B.Eng. Computer Engineering, graduating 2027)
+Skills: Python, AI , Automation, LLMs, Agent frameworks (CrewAI, LangChain), API development, Web scraping
+GitHub: https://github.com/david-the-beloved
+LinkedIn: https://linkedin.com/in/david-ihegaranya
+Looking for: A summer 2026 internship where I can build AI-powered tools, backend infrastructure, and learn from experienced engineers. I'm especially interested in teams working on LLM applications, developer tooling, or AI infrastructure.
+
+Projects:
+  - AI Internship Outreach Agent: Built a multi-agent system using CrewAI to automate personalized internship outreach with knowledge-equipped agents, memory, and human-in-the-loop review.
+  - AI Lead Qualification Agent: Engineered an AI-driven lead tracking system that processes raw customer data and utilizes LLMs to autonomously evaluate and display "buying readiness".
+  - intelligent Document Retrieval System (RAG Agent): Developed an AI-powered internal tool using Retrieval-Augmented Generation (RAG) to ingest PDF documentation and answer user queries with high accuracy.
+
+=== TARGET COMPANY: Busha ===
+Why this company: They are a leading cryptocurrency exchange in Nigeria. My experience building a real-time crypto portfolio tracker and financial asset ledger directly aligns with their core infrastructure.
+Notes: I have previously been in contact with Toni from their engineering team. I am fully willing to learn and work in Golang to fit their environment.
+
+=== PROSPECTS (write one email per person) ===
+
+--- Prospect 1 ---
+  Name: James Ademuyiwa
+  Title: Software Engineer at Busha
+  Email: james@busha.co
+  LinkedIn: https://uk.linkedin.com/in/james-ademuyiwa-326093348
+  Personalization hooks:
+    - JamesAdemuyiwa(@James_Ademuyiwa) / Twitter — @James_Ademuyiwa. · Jun 10. Congratulations, guys. 1. 84.JamesAdemuyiwaRetweeted. Scalex.
+    - JamesAdemuyiwafrom Nigeria - Alteryx Community — JamesAdemuyiwafrom Nigeria. Options.blogger1. Book Worm 59.
+    - Poem: Yellow Children byJamesAdemuyiwa- | Nantygreens — Poetry. Poem: Yellow Children byJamesAdemuyiwa. By nantygreens February 04, 2017. Poem: Yellow Children byJamesAdemuyiwa. (for Northern Nigeria) babie
+
+--- Prospect 2 ---
+  Name: John Inu
+  Title: Software Engineer at Busha | Golang
+  Email: john@busha.co
+  LinkedIn: https://ng.linkedin.com/in/inujohn
+  Personalization hooks:
+    - in28minutes · GitHubHow do you typically find conferences that are legit? : r ...GitHub · Change is constant. GitHub keeps you ahead.Makai Lemon confuses 2026 NFL Combine with viral interview — Helping 1 Million Learners learn Programming, Cloud and DevOps! - in28minutesSee if people tweet about theconference. Academic twitter is still pretty
+    - How do you typically find conferences that are legit? : r ... — See if people tweet about theconference. Academic twitter is still pretty active (for better and for worse), and since conferences are a good place to
+    - GitHub · Change is constant. GitHub keeps you ahead. — The future of building happens together Tools and trends evolve, but collaboration endures. WithGitHub, developers, agents, and code come together on 
+
+--- Prospect 3 ---
+  Name: Sofiyullahi Kasumu
+  Title: Software Engineer @ Busha | Bachelor of Technology ...
+  Email: sofiyullahi@busha.co
+  LinkedIn: https://ng.linkedin.com/in/kasumusof
+  Personalization hooks:
+    - hs-sofiyullahi-kasumu(SofiyullahiKasumu) ·GitHub — SofiyullahiKasumuhs-sofiyullahi-kasumu.hs-sofiyullahi-kasumuhas no activity yet for this period.
+    - Read writing fromKASUMUSOFIYULLAHIon Medium. — Aug 18, 2019.KASUMUSOFIYULLAHI. 2 followers. Following.Careers. Press.Blog.
+    - Sofiyullahi Kasumu - Backend Software Engineer at Busha Digital Limited ... — ExploreSofiyullahi Kasumu's profile a Backend Software Engineer at Busha Digital Limited in Lagos, Nigeria graduate from Federal University of Technol
+
+--- Prospect 4 ---
+  Name: Kim Busha
+  Title: Lead Programmer/Analyst at STPNOC
+  Email: kim@busha.co
+  LinkedIn: https://www.linkedin.com/in/kim-busha-34a58579
+  Personalization hooks:
+    - A data center developer ditched a meeting over safety ... — Feb 25, 2026 ·A data centerdeveloperditched a meeting over safety concerns. Hundreds of neighbors showed up anyway Home Denver neighborhoods Denver ne
+    - [The Greatest Estate Developer] Who does Lloyd end up ... — [The Greatest EstateDeveloper] Who does Lloyd end up marrying? Question For the Novel readers plz spoil me
+    - It's official. Amazon is $5B mystery data center developer ... — The company hid behind an alias for over a year while it worked on the 550-acre deal.
+
+--- Prospect 5 ---
+  Name: Pelumi Ogunwale
+  Title: SoftwareEngineer-Busha
+  Email: pelumi@busha.co
+  LinkedIn: https://ng.linkedin.com/in/pelumi-ogunwale
+  Personalization hooks:
+    - SoftwareEngineer· Passionate developer and a CS student.Pelumi Ogunwale.SoftwareEngineer. Nigeria. 2K followers 500+ connections.
+
+=== OUTPUT FORMAT ===
+For EACH prospect, respond in EXACTLY this format (I will parse this programmatically):
+
+---EMAIL---
+TO: recipient@email.com
+NAME: Recipient Name
+SUBJECT: Your subject line here
+BODY:
+The email body goes here.
+Multiple lines are fine.
+---END---
+
+Write one ---EMAIL--- block per prospect. Do NOT add any other text outside the blocks.
