@@ -63,6 +63,8 @@ KNOWLEDGE_DIR = ROOT / "knowledge"
 
 HUNTER_API_KEY = os.getenv("HUNTER_API_KEY", "")
 ABSTRACT_API_KEY = os.getenv("ABSTRACT_API_KEY", "")
+ABSTRACT_API_KEY_2 = os.getenv("ABSTRACT_API_KEY_2", "")
+_abstract_keys_exhausted = set()  # tracks which keys have been rate-limited
 SEARCH_DELAY = 8  # seconds between DuckDuckGo searches
 HUNTER_BASE = "https://api.hunter.io/v2"
 PROGRESS_FILE = ROOT / "progress.json"
@@ -499,60 +501,77 @@ def hunter_verify_email(email: str) -> dict:
 
 
 def abstract_verify_email(email: str) -> dict:
-    """Fallback email verifier using Abstract API (100 free/month)."""
-    if not ABSTRACT_API_KEY or ABSTRACT_API_KEY == "your-abstract-api-key-here":
-        print(f"    [abstract] ⚠ API key not configured")
-        return {"status": "unknown", "score": 0, "result": "unknown"}
+    """Fallback email verifier using Abstract Email Reputation API. Auto-switches keys on rate limit."""
+    keys = [
+        ("key1", ABSTRACT_API_KEY),
+        ("key2", ABSTRACT_API_KEY_2),
+    ]
+    available = [(name, k) for name, k in keys
+                 if k and k != "your-second-abstract-key-here" and name not in _abstract_keys_exhausted]
 
-    try:
-        resp = httpx.get(
-            "https://emailvalidation.abstractapi.com/v1/",
-            params={"api_key": ABSTRACT_API_KEY, "email": email},
-            timeout=30,
-        )
-        if resp.status_code == 429:
-            print(f"    [abstract] ⚠ Rate limit hit")
+    if not available:
+        print(f"    [abstract] ⚠ All API keys exhausted — stopping workflow")
+        raise RateLimitError("All Abstract API keys exhausted")
+
+    for key_name, api_key in available:
+        try:
+            resp = httpx.get(
+                "https://emailreputation.abstractapi.com/v1/",
+                params={"api_key": api_key, "email": email},
+                timeout=60,
+            )
+            if resp.status_code == 429:
+                print(
+                    f"    [abstract] ⚠ {key_name} rate-limited, switching...")
+                _abstract_keys_exhausted.add(key_name)
+                continue
+            if resp.status_code != 200:
+                print(
+                    f"    [abstract] ⚠ HTTP {resp.status_code} on {key_name}")
+                return {"status": "unknown", "score": 0, "result": "unknown"}
+
+            data = resp.json()
+            deliverability = data.get("email_deliverability", {})
+            d_status = deliverability.get("status", "unknown")
+            is_smtp_valid = deliverability.get("is_smtp_valid", False)
+            quality = data.get("email_quality", {})
+            quality_score = float(quality.get("score", 0) or 0)
+
+            result_map = {
+                "deliverable": "deliverable",
+                "undeliverable": "undeliverable",
+                "unknown": "risky" if is_smtp_valid else "unknown",
+            }
+            status_map = {
+                "deliverable": "valid",
+                "undeliverable": "invalid",
+                "unknown": "unknown",
+            }
+
+            return {
+                "status": status_map.get(d_status, "unknown"),
+                "score": int(quality_score * 100) if quality_score <= 1 else int(quality_score),
+                "result": result_map.get(d_status, "unknown"),
+            }
+        except RateLimitError:
+            raise
+        except Exception as e:
+            print(f"    [abstract] ⚠ Error on {key_name}: {e}")
             return {"status": "unknown", "score": 0, "result": "unknown"}
-        if resp.status_code != 200:
-            print(f"    [abstract] ⚠ HTTP {resp.status_code}")
-            return {"status": "unknown", "score": 0, "result": "unknown"}
 
-        data = resp.json()
-        deliverability = data.get("deliverability", "UNKNOWN")
-        is_smtp_valid = data.get("is_smtp_valid", {}).get("value", False)
-        quality_score = float(data.get("quality_score", 0) or 0)
+    # All keys exhausted during this call
+    print(f"    [abstract] ⚠ All API keys exhausted — stopping workflow")
+    raise RateLimitError("All Abstract API keys exhausted")
 
-        result_map = {
-            "DELIVERABLE": "deliverable",
-            "UNDELIVERABLE": "undeliverable",
-            "UNKNOWN": "risky" if is_smtp_valid else "unknown",
-        }
-        status_map = {
-            "DELIVERABLE": "valid",
-            "UNDELIVERABLE": "invalid",
-            "UNKNOWN": "unknown",
-        }
 
-        return {
-            "status": status_map.get(deliverability, "unknown"),
-            "score": int(quality_score * 100) if quality_score <= 1 else int(quality_score),
-            "result": result_map.get(deliverability, "unknown"),
-        }
-    except Exception as e:
-        print(f"    [abstract] ⚠ Error: {e}")
-        return {"status": "unknown", "score": 0, "result": "unknown"}
+class RateLimitError(Exception):
+    """Raised when Abstract API is rate-limited — stops the workflow."""
+    pass
 
 
 def verify_email(email: str) -> dict:
-    """Try Hunter.io first, fall back to Abstract API if rate-limited."""
-    result = hunter_verify_email(email)
-    if result["result"] != "unknown" or result["score"] > 0:
-        return result
-    # Hunter returned unknown (likely rate-limited) — try Abstract
-    if ABSTRACT_API_KEY:
-        print(f"    [fallback] Trying Abstract API...")
-        return abstract_verify_email(email)
-    return result
+    """Verify email using Abstract API directly."""
+    return abstract_verify_email(email)
 
 
 def find_emails(prospects: list[dict], domain: str) -> list[dict]:
@@ -610,7 +629,7 @@ def find_emails(prospects: list[dict], domain: str) -> list[dict]:
 
     # ── Verify all emails ──
     print(f"\n  {'─'*50}")
-    print(f"  Verifying emails via Hunter.io...")
+    print(f"  Verifying emails via Abstract API...")
     print(f"  {'─'*50}")
 
     enriched = []

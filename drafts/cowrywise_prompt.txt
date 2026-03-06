@@ -1,0 +1,76 @@
+You are an expert cold email writer for internship outreach.
+Write short, personalized, genuine cold emails that reference specific details about each recipient.
+
+RULES:
+- Keep each email under 180 words
+- Reference a specific personalization hook about the recipient
+- Be genuine and enthusiastic, not salesy or generic
+- Ask for a 10-minute chat, not a job directly
+- End with: "If you'd prefer not to receive messages like this, just let me know and I won't reach out again."
+- Sign off as the applicant below
+- Add my number,linkedIn link and github link at the bottom
+
+=== APPLICANT INFO ===
+Name: David Ihegaranya
+Email: dihegaranya@gmail.com
+University: Covenant University (B.Eng. Computer Engineering, graduating 2027)
+Skills: Python, AI/ML, Automation, LLMs, Agent frameworks (CrewAI, LangChain), API development, Web scraping
+GitHub: https://github.com/david-the-beloved
+LinkedIn: https://linkedin.com/in/david-ihegaranya
+Phone: 08166304792
+Looking for: A 6 months SIWES 2026 internship starting this march, where I can build AI-powered tools, backend infrastructure, and learn from experienced engineers. I'm especially interested in teams working on LLM applications, developer tooling, or AI infrastructure.
+
+Projects:
+  - AI Internship Outreach Agent: Built a multi-agent system using CrewAI to automate personalized internship outreach with knowledge-equipped agents, memory, and human-in-the-loop review.
+  - AI Lead Qualification Agent: Engineered an AI-driven lead tracking system that processes raw customer data and utilizes LLMs to autonomously evaluate and display "buying readiness".
+  - intelligent Document Retrieval System (RAG Agent): Developed an AI-powered internal tool using Retrieval-Augmented Generation (RAG) to ingest PDF documentation and answer user queries with high accuracy.
+
+=== TARGET COMPANY: Cowrywise ===
+Why this company: Their wealth management platform handles complex financial data and automated investments. As a current Cowrywise ambassador, I already understand the product ecosystem deeply, and my skills in building secure financial ledgers would be highly relevant to their backend.
+Notes: [Specific internal AI projects cannot be verified] They have a very public and accessible engineering team that actively engages with the local tech community.
+
+=== PROSPECTS (write one email per person) ===
+
+--- Prospect 1 ---
+  Name: Taslim Oseni
+  Title: Cowrywise
+  Email: taslim@cowrywise.com
+  LinkedIn: https://www.linkedin.com/in/taslim-oseni
+  Personalization hooks:
+    - TaslimOseni (Taslim Oseni) · GitHub — Senior Software Engineer. TaslimOseni has 41 repositories available. Follow their code on GitHub.
+    - User Taslim Oseni - Academia Stack Exchange — Taslim Oseni · Member for 9 years, 2 months · Last seen more than 3 years ago · Twitter · GitHub · taslimoseni.me · Nigeria · Network profile · Profil
+    - User Taslim Oseni - Stack Overflow — About the company Visit the blog · Find centralized, trusted content and collaborate around the technologies you use most. Learn more about Collective
+
+--- Prospect 2 ---
+  Name: Ebenezer Oshobu
+  Title: Software Engineer | Cowrywise Ambassador
+  Email: ebenezer@cowrywise.com
+  LinkedIn: https://www.linkedin.com/in/ebenezer-oshobu-47b788195
+  Personalization hooks:
+    - Search · GitHub — GitHubis where people build software. More than 150 million people useGitHubto discover, fork, and contribute to over 420 million projects.
+    - Git LookUP - alexmonteil.github.io — Welcome to Git LookUp, theGitHubprofile search engine.
+    - Sign in to GitHub · GitHub — GitHubis where people build software. More than 150 million people useGitHubto discover, fork, and contribute to over 420 million projects.
+
+--- Prospect 3 ---
+  Name: Daniel Coker
+  Title: Cowrywise
+  Email: daniel@cowrywise.com
+  LinkedIn: https://ng.linkedin.com/in/daniel-coker
+  Personalization hooks:
+    - DanielCoker- Wikipedia — DanielCoker, African-American missionary to Sierra Leone, 1820.DanielCoker(1780–1846), born Isaac Wright, was an African American of mixed race from B
+    - danielcoker (DanielCoker) ·GitHub — GitHubSpark New. Build and deploy intelligent apps.
+    - DanielCoker(1780-1846) | BlackPast.org — DanielCoker(born Isaac Wright) was a writer, activist, and a founder of the African Methodist Episcopal (AME) Church who eventually emigrated from the
+
+=== OUTPUT FORMAT ===
+For EACH prospect, respond in EXACTLY this format (I will parse this programmatically):
+
+---EMAIL---
+TO: recipient@email.com
+NAME: Recipient Name
+SUBJECT: Your subject line here
+BODY:
+The email body goes here.
+Multiple lines are fine.
+---END---
+
+Write one ---EMAIL--- block per prospect. Do NOT add any other text outside the blocks.

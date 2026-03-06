@@ -26,7 +26,7 @@
 
     {
       "parameters": {
-        "jsCode": "// Read progress.json and find the next company that hasn't been completed\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst PROGRESS = path.join(BASE, 'progress.json');\nconst COMPANIES = path.join(BASE, 'knowledge/target_companies.json');\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(fs.readFileSync(PROGRESS, 'utf-8')); } catch(e) {}\n\nlet companies = [];\ntry { companies = JSON.parse(fs.readFileSync(COMPANIES, 'utf-8')).companies || []; } catch(e) {}\n\nconst next = companies.find(c => !progress.completed.includes(c.name));\n\nif (!next) {\n  return [{ json: { done: true, message: `All ${companies.length} companies completed! 🎉`, total: companies.length, completed: progress.completed.length } }];\n}\n\nconst slug = next.name.toLowerCase().replace(/ /g, '_');\nconst doneCount = progress.completed.length;\n\nreturn [{ json: {\n  done: false,\n  company: next.name,\n  domain: next.domain,\n  slug,\n  progress: `${doneCount}/${companies.length}`,\n  doneCount,\n  total: companies.length\n} }];"
+        "jsCode": "// Read progress.json and find the next company that hasn't been completed or researched\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst PROGRESS = path.join(BASE, 'progress.json');\nconst COMPANIES = path.join(BASE, 'knowledge/target_companies.json');\n\nfunction readJSON(p) { return fs.readFileSync(p, 'utf-8').replace(/^\\uFEFF/, ''); }\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(readJSON(PROGRESS)); } catch(e) {}\n\nlet companies = [];\ntry { companies = JSON.parse(readJSON(COMPANIES)).companies || []; } catch(e) {}\n\nconst skip = new Set([...progress.completed, ...progress.researched]);\nconst next = companies.find(c => !skip.has(c.name));\n\nif (!next) {\n  return [{ json: { done: true, message: `All ${companies.length} companies completed! 🎉`, total: companies.length, completed: progress.completed.length, researched: (progress.researched || []).length } }];\n}\n\nconst slug = next.name.toLowerCase().replace(/ /g, '_');\nconst doneCount = progress.completed.length;\n\nreturn [{ json: {\n  done: false,\n  company: next.name,\n  domain: next.domain,\n  slug,\n  progress: `${doneCount}/${companies.length}`,\n  doneCount,\n  total: companies.length\n} }];"
       },
       "id": "code-next-company",
       "name": "Get Next Company",
@@ -165,24 +165,23 @@
     },
     {
       "parameters": {
-        "fromEmail": "David Ihegaranya <dihegaranya@gmail.com>",
-        "toEmail": "={{ $json.to_email }}",
+        "resource": "draft",
         "subject": "={{ $json.subject }}",
-        "emailFormat": "text",
-        "text": "={{ $json.body }}",
+        "emailType": "text",
+        "message": "={{ $json.body }}",
         "options": {
-          "appendAttribution": false
+          "sendTo": "={{ $json.to_name ? $json.to_name + ' <' + $json.to_email + '>' : $json.to_email }}"
         }
       },
-      "id": "gmail-send-email",
-      "name": "Send Email: Outreach",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 2,
+      "id": "gmail-create-draft",
+      "name": "Save as Gmail Draft",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
       "position": [1440, 400],
       "credentials": {
-        "smtp": {
-          "id": "REPLACE_WITH_SMTP_CREDENTIAL_ID",
-          "name": "SMTP"
+        "gmailOAuth2": {
+          "id": "REPLACE_WITH_GMAIL_OAUTH_CREDENTIAL_ID",
+          "name": "Gmail OAuth2"
         }
       }
     },
@@ -199,7 +198,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// After EACH successful send, update send_log + progress safely\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst DRAFTS = path.join(BASE, 'drafts');\nconst PROGRESS = path.join(BASE, 'progress.json');\nconst SEND_LOG = path.join(BASE, 'send_log.json');\n\n// Pull original email data from Parse Email Blocks (Send Email node output loses it)\nconst allParsed = $('Parse Email Blocks').all();\nconst idx = $runIndex;\nconst parsed = allParsed[idx] ? allParsed[idx].json : {};\nconst company = parsed.company || '';\nconst toEmail = String(parsed.to_email || '').toLowerCase();\n\nif (!company || !toEmail.includes('@')) {\n  return [{ json: { status: 'skipped', message: 'No valid sent-email context.' } }];\n}\n\nlet sendLog = { today: '', sent_today: 0, all_recipients: [] };\ntry { sendLog = JSON.parse(fs.readFileSync(SEND_LOG, 'utf-8')); } catch(e) {}\nconst today = new Date().toISOString().split('T')[0];\nif (sendLog.today !== today) {\n  sendLog.today = today;\n  sendLog.sent_today = 0;\n}\nsendLog.sent_today += 1;\nif (!sendLog.all_recipients.includes(toEmail)) {\n  sendLog.all_recipients.push(toEmail);\n}\nfs.writeFileSync(SEND_LOG, JSON.stringify(sendLog, null, 2));\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(fs.readFileSync(PROGRESS, 'utf-8')); } catch(e) {}\nif (!progress.completed.includes(company)) {\n  progress.completed.push(company);\n}\nprogress.researched = (progress.researched || []).filter(c => c !== company);\nif (progress.current === company) progress.current = null;\nfs.writeFileSync(PROGRESS, JSON.stringify(progress, null, 2));\n\nconst slug = company.toLowerCase().replace(/ /g, '_');\nconst src = path.join(DRAFTS, `${slug}_drafts.txt`);\nconst dst = path.join(DRAFTS, `${slug}_drafts_sent.txt`);\ntry { fs.renameSync(src, dst); } catch(e) {}\n\nconst COMPANIES_FILE = path.join(BASE, 'knowledge/target_companies.json');\nlet total = 0;\ntry { total = JSON.parse(fs.readFileSync(COMPANIES_FILE, 'utf-8')).companies.length; } catch(e) {}\n\nreturn [{ json: {\n  status: 'sent',\n  companies_done: [company],\n  emails_sent: 1,\n  total_completed: progress.completed.length,\n  total_companies: total,\n  remaining: total - progress.completed.length,\n  daily_sent: sendLog.sent_today,\n  message: `Sent 1 email to ${toEmail} for ${company}. ${progress.completed.length}/${total} done. (${sendLog.sent_today}/18 daily limit)`\n} }];"
+        "jsCode": "// After EACH successful send, update send_log + progress safely\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst DRAFTS = path.join(BASE, 'drafts');\nconst PROGRESS = path.join(BASE, 'progress.json');\nconst SEND_LOG = path.join(BASE, 'send_log.json');\n\n// Pull original email data from Parse Email Blocks (Send Email node output loses it)\nconst allParsed = $('Parse Email Blocks').all();\nconst idx = $runIndex;\nconst parsed = allParsed[idx] ? allParsed[idx].json : {};\nconst company = parsed.company || '';\nconst toEmail = String(parsed.to_email || '').toLowerCase();\n\nif (!company || !toEmail.includes('@')) {\n  return [{ json: { status: 'skipped', message: 'No valid sent-email context.' } }];\n}\n\nlet sendLog = { today: '', sent_today: 0, all_recipients: [] };\ntry { sendLog = JSON.parse(fs.readFileSync(SEND_LOG, 'utf-8')); } catch(e) {}\nconst today = new Date().toISOString().split('T')[0];\nif (sendLog.today !== today) {\n  sendLog.today = today;\n  sendLog.sent_today = 0;\n}\nsendLog.sent_today += 1;\nif (!sendLog.all_recipients.includes(toEmail)) {\n  sendLog.all_recipients.push(toEmail);\n}\nfs.writeFileSync(SEND_LOG, JSON.stringify(sendLog, null, 2));\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(fs.readFileSync(PROGRESS, 'utf-8')); } catch(e) {}\nif (!progress.completed.includes(company)) {\n  progress.completed.push(company);\n}\nprogress.researched = (progress.researched || []).filter(c => c !== company);\nif (progress.current === company) progress.current = null;\nfs.writeFileSync(PROGRESS, JSON.stringify(progress, null, 2));\n\nconst slug = company.toLowerCase().replace(/ /g, '_');\nconst src = path.join(DRAFTS, `${slug}_drafts.txt`);\nconst dst = path.join(DRAFTS, `${slug}_drafts_sent.txt`);\ntry { fs.renameSync(src, dst); } catch(e) {}\n\nconst COMPANIES_FILE = path.join(BASE, 'knowledge/target_companies.json');\nlet total = 0;\ntry { total = JSON.parse(fs.readFileSync(COMPANIES_FILE, 'utf-8')).companies.length; } catch(e) {}\n\nreturn [{ json: {\n  status: 'sent',\n  companies_done: [company],\n  emails_sent: 1,\n  total_completed: progress.completed.length,\n  total_companies: total,\n  remaining: total - progress.completed.length,\n  daily_sent: sendLog.sent_today,\n  message: `Saved draft for ${toEmail} (${company}). ${progress.completed.length}/${total} done. (${sendLog.sent_today}/18 daily limit)`\n} }];"
       },
       "id": "code-mark-done",
       "name": "Mark Company Done",
@@ -289,11 +288,11 @@
     },
     "Valid Email Address?": {
       "main": [
-        [{ "node": "Send Email: Outreach", "type": "main", "index": 0 }],
+        [{ "node": "Save as Gmail Draft", "type": "main", "index": 0 }],
         [{ "node": "Log Skipped", "type": "main", "index": 0 }]
       ]
     },
-    "Send Email: Outreach": {
+    "Save as Gmail Draft": {
       "main": [[{ "node": "Wait 30s", "type": "main", "index": 0 }]]
     },
     "Wait 30s": {
