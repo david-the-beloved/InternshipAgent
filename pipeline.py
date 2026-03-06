@@ -62,6 +62,7 @@ KNOWLEDGE_DIR = ROOT / "knowledge"
 # ── Config ────────────────────────────────────────────────────
 
 HUNTER_API_KEY = os.getenv("HUNTER_API_KEY", "")
+ABSTRACT_API_KEY = os.getenv("ABSTRACT_API_KEY", "")
 SEARCH_DELAY = 8  # seconds between DuckDuckGo searches
 HUNTER_BASE = "https://api.hunter.io/v2"
 PROGRESS_FILE = ROOT / "progress.json"
@@ -497,6 +498,63 @@ def hunter_verify_email(email: str) -> dict:
         return {"status": "unknown", "score": 0, "result": "unknown"}
 
 
+def abstract_verify_email(email: str) -> dict:
+    """Fallback email verifier using Abstract API (100 free/month)."""
+    if not ABSTRACT_API_KEY or ABSTRACT_API_KEY == "your-abstract-api-key-here":
+        print(f"    [abstract] ⚠ API key not configured")
+        return {"status": "unknown", "score": 0, "result": "unknown"}
+
+    try:
+        resp = httpx.get(
+            "https://emailvalidation.abstractapi.com/v1/",
+            params={"api_key": ABSTRACT_API_KEY, "email": email},
+            timeout=30,
+        )
+        if resp.status_code == 429:
+            print(f"    [abstract] ⚠ Rate limit hit")
+            return {"status": "unknown", "score": 0, "result": "unknown"}
+        if resp.status_code != 200:
+            print(f"    [abstract] ⚠ HTTP {resp.status_code}")
+            return {"status": "unknown", "score": 0, "result": "unknown"}
+
+        data = resp.json()
+        deliverability = data.get("deliverability", "UNKNOWN")
+        is_smtp_valid = data.get("is_smtp_valid", {}).get("value", False)
+        quality_score = float(data.get("quality_score", 0) or 0)
+
+        result_map = {
+            "DELIVERABLE": "deliverable",
+            "UNDELIVERABLE": "undeliverable",
+            "UNKNOWN": "risky" if is_smtp_valid else "unknown",
+        }
+        status_map = {
+            "DELIVERABLE": "valid",
+            "UNDELIVERABLE": "invalid",
+            "UNKNOWN": "unknown",
+        }
+
+        return {
+            "status": status_map.get(deliverability, "unknown"),
+            "score": int(quality_score * 100) if quality_score <= 1 else int(quality_score),
+            "result": result_map.get(deliverability, "unknown"),
+        }
+    except Exception as e:
+        print(f"    [abstract] ⚠ Error: {e}")
+        return {"status": "unknown", "score": 0, "result": "unknown"}
+
+
+def verify_email(email: str) -> dict:
+    """Try Hunter.io first, fall back to Abstract API if rate-limited."""
+    result = hunter_verify_email(email)
+    if result["result"] != "unknown" or result["score"] > 0:
+        return result
+    # Hunter returned unknown (likely rate-limited) — try Abstract
+    if ABSTRACT_API_KEY:
+        print(f"    [fallback] Trying Abstract API...")
+        return abstract_verify_email(email)
+    return result
+
+
 def find_emails(prospects: list[dict], domain: str) -> list[dict]:
     """
     Stage 2: Find emails for all prospects via Hunter.io.
@@ -534,11 +592,10 @@ def find_emails(prospects: list[dict], domain: str) -> list[dict]:
                 "email_source": result["source"],
             })
         else:
-            # Try common email patterns
+            # Try common email patterns (two most common formats)
             patterns = [
                 f"{first_name.lower()}@{domain}",
                 f"{first_name.lower()}.{last_name.lower()}@{domain}",
-                f"{first_name[0].lower()}{last_name.lower()}@{domain}",
             ]
             print(
                 f"    ✗ Not found via finder. Will try patterns: {', '.join(patterns)}")
@@ -566,7 +623,7 @@ def find_emails(prospects: list[dict], domain: str) -> list[dict]:
             found_valid = False
             for pat in patterns:
                 print(f"\n    Verifying {pat} ({name})...")
-                vr = hunter_verify_email(pat)
+                vr = verify_email(pat)
                 status_icon = {
                     "deliverable": "✓", "risky": "⚠", "undeliverable": "✗"
                 }.get(vr["result"], "?")
@@ -589,7 +646,7 @@ def find_emails(prospects: list[dict], domain: str) -> list[dict]:
             # Verify the Hunter-found email too
             email = c["email"]
             print(f"\n    Verifying {email} ({name})...")
-            vr = hunter_verify_email(email)
+            vr = verify_email(email)
             status_icon = {
                 "deliverable": "✓", "risky": "⚠", "undeliverable": "✗"
             }.get(vr["result"], "?")
@@ -651,12 +708,13 @@ def generate_gemini_prompt(
         "Write short, personalized, genuine cold emails that reference specific details about each recipient.",
         "",
         "RULES:",
-        "- Keep each email under 120 words",
+        "- Keep each email under 180 words",
         "- Reference a specific personalization hook about the recipient",
         "- Be genuine and enthusiastic, not salesy or generic",
-        "- Ask for a 15-minute chat, not a job directly",
+        "- Ask for a 10-minute chat, not a job directly",
         "- End with: \"If you'd prefer not to receive messages like this, just let me know and I won't reach out again.\"",
         "- Sign off as the applicant below",
+        "- Add my number,linkedIn link and github link at the bottom",
         "",
         "=== APPLICANT INFO ===",
         f"Name: {profile.get('name', '')}",
@@ -665,6 +723,7 @@ def generate_gemini_prompt(
         f"Skills: {', '.join(profile.get('skills', []))}",
         f"GitHub: {profile.get('links', {}).get('github', '')}",
         f"LinkedIn: {profile.get('links', {}).get('linkedin', '')}",
+        f"Phone: {profile.get('links', {}).get('number', '')}",
         f"Looking for: {profile.get('looking_for', '')}",
         "",
         "Projects:",

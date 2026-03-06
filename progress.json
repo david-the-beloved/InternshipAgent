@@ -1,10 +1,11 @@
 {
   "completed": [
     "Busha",
-    "PiggyVest"
+    "PiggyVest",
+    "Stears",
+    "FairMoney",
+    "Carbon"
   ],
-  "researched": [
-    "Stears"
-  ],
-  "current": "Stears"
+  "researched": [],
+  "current": null
 }

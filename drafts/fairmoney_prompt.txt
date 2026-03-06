@@ -1,0 +1,76 @@
+You are an expert cold email writer for internship outreach.
+Write short, personalized, genuine cold emails that reference specific details about each recipient.
+
+RULES:
+- Keep each email under 180 words
+- Reference a specific personalization hook about the recipient
+- Be genuine and enthusiastic, not salesy or generic
+- Ask for a 10-minute chat, not a job directly
+- End with: "If you'd prefer not to receive messages like this, just let me know and I won't reach out again."
+- Add my linked in number, link and github at the bottom
+- Sign off as the applicant below
+
+=== APPLICANT INFO ===
+Name: David Ihegaranya
+Email: dihegaranya@gmail.com
+University: Covenant University (B.Eng. Computer Engineering, graduating 2027)
+Skills: Python, AI/ML, Automation, LLMs, Agent frameworks (CrewAI, LangChain), API development, Web scraping
+Number: 08166304792
+GitHub: https://github.com/david-the-beloved
+LinkedIn: https://linkedin.com/in/david-ihegaranya
+Looking for: A summer 2026 internship where I can build AI-powered tools, backend infrastructure, and learn from experienced engineers. I'm especially interested in teams working on LLM applications, developer tooling, or AI infrastructure.
+
+Projects:
+  - AI Internship Outreach Agent: Built a multi-agent system using CrewAI to automate personalized internship outreach with knowledge-equipped agents, memory, and human-in-the-loop review.
+  - AI Lead Qualification Agent: Engineered an AI-driven lead tracking system that processes raw customer data and utilizes LLMs to autonomously evaluate and display "buying readiness".
+  - intelligent Document Retrieval System (RAG Agent): Developed an AI-powered internal tool using Retrieval-Augmented Generation (RAG) to ingest PDF documentation and answer user queries with high accuracy.
+
+=== TARGET COMPANY: FairMoney ===
+Why this company: They rely heavily on automated credit scoring and underwriting. My AI Lead Qualification Agent demonstrates my ability to build logic that autonomously scores user profiles.
+Notes: [Specific LLM usage cannot be verified] Their entire lending business model is dependent on data-driven automation and risk scoring.
+
+=== PROSPECTS (write one email per person) ===
+
+--- Prospect 1 ---
+  Name: Timilehin Omolana
+  Title: FairMoney
+  Email: timilehin.omolana@fairmoney.io
+  LinkedIn: https://ng.linkedin.com/in/timmyomolana
+  Personalization hooks:
+    - Bun (oprogramowanie) – Wikipedia, wolna encyklopedia — ↑TimilehinOmolana: What Is Bun.js and Why Is the JavaScript Community Excited About It?. makeuseof.com, 2022-08-02. [dostęp 2023-05-30]. (ang.).
+    - Tee-Stark (TimmyOmolana) ·GitHub — LinkedIn:TimilehinOmolana. Also read my technical articles and tutorials on MakeUseOf:TimilehinOmolana. Pronouns: He/Him.
+    - TimilehinOmolanaon Contra — ViewTimilehinOmolana's Profile on Contra, the Independent-first, commission-free freelance marketplace shaping the future of work. Hire a freelancer t
+
+--- Prospect 2 ---
+  Name: Ayman Alkurdi
+  Title: Senior Software Engineer @ FairMoney - LinkedIn
+  Email: ayman.alkurdi@fairmoney.io
+  LinkedIn: https://ae.linkedin.com/in/aymanalkurdi0
+  Personalization hooks:
+    - aymanalkurdi0 (Ayman) ·GitHub — Ayman aymanalkurdi0. Follow. Senior Android Engineer at Fair Money. Hi, I’mAymanAlkurdi. I’m interested in mobile development and some backend stuff. 
+    - aymanalkurdi- Bayt.com — Shareaymanalkurdiprofile. Share on Facebook.
+    - Posts aboutAymanAlkurdiwritten by — Enter your email address to follow thisblogand receive notifications of new posts by email.
+
+--- Prospect 3 ---
+  Name: Idris Gbenga
+  Title: Head of Engineering @Fairmoney Business
+  Email: gbenga.idris@fairmoney.io
+  LinkedIn: https://ng.linkedin.com/in/idrisgbenga
+  Personalization hooks:
+    - idrisgbenga(@idris_gbenga) / Twitter — 3. 8.idrisgbengaRetweeted. Pastor Emmanuel Iren.8,098. Show this thread.idrisgbengaRetweeted. Bolaji Idowu.
+    - Idris&GbengaTo Star In 2 Major Summer 2010 Films | Feels Good... — IdrisElba andGbengaAkinnagbe are two actors from the hit critically-acclaimed HBO series "The Wire" who made it big in Hollywood with not one but two 
+    - KC real estate developer faces drug trafficking charges ... — 2 days ago ·A real estatedeveloperwho allegedly defrauded investors is in federal custody and charged with conspiracy to traffic fentanyl.
+
+=== OUTPUT FORMAT ===
+For EACH prospect, respond in EXACTLY this format (I will parse this programmatically):
+
+---EMAIL---
+TO: recipient@email.com
+NAME: Recipient Name
+SUBJECT: Your subject line here
+BODY:
+The email body goes here.
+Multiple lines are fine.
+---END---
+
+Write one ---EMAIL--- block per prospect. Do NOT add any other text outside the blocks.

@@ -13,7 +13,7 @@
     {
       "parameters": {
         "rule": {
-          "interval": [{ "field": "minutes", "minutesInterval": 30 }]
+          "interval": [{ "field": "minutes", "minutesInterval": 10 }]
         }
       },
       "id": "schedule-trigger",
@@ -82,17 +82,6 @@
       "typeVersion": 2,
       "position": [1060, 100],
       "notes": "Routes to Read Prompt if research succeeded (status=ok), otherwise skips company."
-    },
-    {
-      "parameters": {
-        "jsCode": "// Log that this company was skipped due to no valid emails\nconst company = $input.first().json.company || 'unknown';\nconst output = $input.first().json.output || '';\nconsole.log(`Skipped ${company}: no valid emails found`);\nreturn [{ json: { company, skipped: true, reason: 'no_valid_emails', detail: output } }];"
-      },
-      "id": "code-log-skipped-company",
-      "name": "Log Skipped Company",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [1180, 300],
-      "notes": "Company had no valid emails. Pipeline already marked it completed. Loops back to research the next company."
     },
     {
       "parameters": {
@@ -210,7 +199,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// After EACH successful send, update send_log + progress safely\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst DRAFTS = path.join(BASE, 'drafts');\nconst PROGRESS = path.join(BASE, 'progress.json');\nconst SEND_LOG = path.join(BASE, 'send_log.json');\n\nconst item = $input.first().json || {};\nconst company = item.company || '';\nconst toEmail = String(item.to_email || '').toLowerCase();\n\nif (!company || !toEmail.includes('@')) {\n  return [{ json: { status: 'skipped', message: 'No valid sent-email context.' } }];\n}\n\nlet sendLog = { today: '', sent_today: 0, all_recipients: [] };\ntry { sendLog = JSON.parse(fs.readFileSync(SEND_LOG, 'utf-8')); } catch(e) {}\nconst today = new Date().toISOString().split('T')[0];\nif (sendLog.today !== today) {\n  sendLog.today = today;\n  sendLog.sent_today = 0;\n}\nsendLog.sent_today += 1;\nif (!sendLog.all_recipients.includes(toEmail)) {\n  sendLog.all_recipients.push(toEmail);\n}\nfs.writeFileSync(SEND_LOG, JSON.stringify(sendLog, null, 2));\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(fs.readFileSync(PROGRESS, 'utf-8')); } catch(e) {}\nif (!progress.completed.includes(company)) {\n  progress.completed.push(company);\n}\nprogress.researched = (progress.researched || []).filter(c => c !== company);\nif (progress.current === company) progress.current = null;\nfs.writeFileSync(PROGRESS, JSON.stringify(progress, null, 2));\n\nconst slug = company.toLowerCase().replace(/ /g, '_');\nconst src = path.join(DRAFTS, `${slug}_drafts.txt`);\nconst dst = path.join(DRAFTS, `${slug}_drafts_sent.txt`);\ntry { fs.renameSync(src, dst); } catch(e) {}\n\nconst COMPANIES_FILE = path.join(BASE, 'knowledge/target_companies.json');\nlet total = 0;\ntry { total = JSON.parse(fs.readFileSync(COMPANIES_FILE, 'utf-8')).companies.length; } catch(e) {}\n\nreturn [{ json: {\n  status: 'sent',\n  companies_done: [company],\n  emails_sent: 1,\n  total_completed: progress.completed.length,\n  total_companies: total,\n  remaining: total - progress.completed.length,\n  daily_sent: sendLog.sent_today,\n  message: `Sent 1 email to ${toEmail} for ${company}. ${progress.completed.length}/${total} done. (${sendLog.sent_today}/18 daily limit)`\n} }];"
+        "jsCode": "// After EACH successful send, update send_log + progress safely\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst DRAFTS = path.join(BASE, 'drafts');\nconst PROGRESS = path.join(BASE, 'progress.json');\nconst SEND_LOG = path.join(BASE, 'send_log.json');\n\n// Pull original email data from Parse Email Blocks (Send Email node output loses it)\nconst allParsed = $('Parse Email Blocks').all();\nconst idx = $runIndex;\nconst parsed = allParsed[idx] ? allParsed[idx].json : {};\nconst company = parsed.company || '';\nconst toEmail = String(parsed.to_email || '').toLowerCase();\n\nif (!company || !toEmail.includes('@')) {\n  return [{ json: { status: 'skipped', message: 'No valid sent-email context.' } }];\n}\n\nlet sendLog = { today: '', sent_today: 0, all_recipients: [] };\ntry { sendLog = JSON.parse(fs.readFileSync(SEND_LOG, 'utf-8')); } catch(e) {}\nconst today = new Date().toISOString().split('T')[0];\nif (sendLog.today !== today) {\n  sendLog.today = today;\n  sendLog.sent_today = 0;\n}\nsendLog.sent_today += 1;\nif (!sendLog.all_recipients.includes(toEmail)) {\n  sendLog.all_recipients.push(toEmail);\n}\nfs.writeFileSync(SEND_LOG, JSON.stringify(sendLog, null, 2));\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(fs.readFileSync(PROGRESS, 'utf-8')); } catch(e) {}\nif (!progress.completed.includes(company)) {\n  progress.completed.push(company);\n}\nprogress.researched = (progress.researched || []).filter(c => c !== company);\nif (progress.current === company) progress.current = null;\nfs.writeFileSync(PROGRESS, JSON.stringify(progress, null, 2));\n\nconst slug = company.toLowerCase().replace(/ /g, '_');\nconst src = path.join(DRAFTS, `${slug}_drafts.txt`);\nconst dst = path.join(DRAFTS, `${slug}_drafts_sent.txt`);\ntry { fs.renameSync(src, dst); } catch(e) {}\n\nconst COMPANIES_FILE = path.join(BASE, 'knowledge/target_companies.json');\nlet total = 0;\ntry { total = JSON.parse(fs.readFileSync(COMPANIES_FILE, 'utf-8')).companies.length; } catch(e) {}\n\nreturn [{ json: {\n  status: 'sent',\n  companies_done: [company],\n  emails_sent: 1,\n  total_completed: progress.completed.length,\n  total_companies: total,\n  remaining: total - progress.completed.length,\n  daily_sent: sendLog.sent_today,\n  message: `Sent 1 email to ${toEmail} for ${company}. ${progress.completed.length}/${total} done. (${sendLog.sent_today}/18 daily limit)`\n} }];"
       },
       "id": "code-mark-done",
       "name": "Mark Company Done",
@@ -237,6 +226,18 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [940, 300]
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "id": "wait-between-companies",
+      "name": "Wait 10s Between Companies",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1780, 100],
+      "notes": "Brief cooldown between companies to avoid rate-limiting on DuckDuckGo and Hunter.io."
     }
   ],
   "connections": {
@@ -258,14 +259,17 @@
     "Emails Found?": {
       "main": [
         [{ "node": "Read Prompt File", "type": "main", "index": 0 }],
-        [{ "node": "Log Skipped Company", "type": "main", "index": 0 }]
+        [{ "node": "Get Next Company", "type": "main", "index": 0 }]
       ]
     },
     "Read Prompt File": {
       "main": [[{ "node": "Mark as Researched", "type": "main", "index": 0 }]]
     },
-    "Log Skipped Company": {
-      "main": [[{ "node": "Start: Research Next Company", "type": "main", "index": 0 }]]
+    "Mark as Researched": {
+      "main": [[{ "node": "Wait 10s Between Companies", "type": "main", "index": 0 }]]
+    },
+    "Wait 10s Between Companies": {
+      "main": [[{ "node": "Get Next Company", "type": "main", "index": 0 }]]
     },
 
     "Schedule: Check for Ready Drafts": {
