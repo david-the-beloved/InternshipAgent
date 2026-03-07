@@ -114,8 +114,8 @@ Built to automate my SIWES internship outreach to Nigerian tech companies.
 
 ```bash
 # Clone
-git clone https://github.com/david-the-beloved/internship-agent.git
-cd internship-agent
+git clone https://github.com/david-the-beloved/InternshipAgent.git
+cd InternshipAgent
 
 # Python environment
 python -m venv venv
