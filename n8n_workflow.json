@@ -237,6 +237,16 @@
       "typeVersion": 1.1,
       "position": [1780, 100],
       "notes": "Brief cooldown between companies to avoid rate-limiting on DuckDuckGo and Hunter.io."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Mark company as completed so the loop moves on\nconst fs = require('fs');\nconst path = require('path');\n\nconst BASE = 'C:/Users/USER/Documents/Internship agent';\nconst PROGRESS = path.join(BASE, 'progress.json');\n\nconst company = $('Get Next Company').first().json.company;\nconst output = $('Run: Research Pipeline').first().json.output || '';\n\nlet progress = { completed: [], researched: [], current: null };\ntry { progress = JSON.parse(fs.readFileSync(PROGRESS, 'utf-8').replace(/^\\uFEFF/, '')); } catch(e) {}\n\nif (!progress.completed.includes(company)) {\n  progress.completed.push(company);\n}\nprogress.researched = (progress.researched || []).filter(c => c !== company);\nif (progress.current === company) progress.current = null;\n\nfs.writeFileSync(PROGRESS, JSON.stringify(progress, null, 2));\n\nreturn [{ json: { status: 'skipped', company, reason: 'research failed or no emails', output: output.slice(-500) } }];"
+      },
+      "id": "code-skip-failed",
+      "name": "Skip Failed Company",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 200]
     }
   ],
   "connections": {
@@ -258,8 +268,11 @@
     "Emails Found?": {
       "main": [
         [{ "node": "Read Prompt File", "type": "main", "index": 0 }],
-        [{ "node": "Get Next Company", "type": "main", "index": 0 }]
+        [{ "node": "Skip Failed Company", "type": "main", "index": 0 }]
       ]
+    },
+    "Skip Failed Company": {
+      "main": [[{ "node": "Wait 10s Between Companies", "type": "main", "index": 0 }]]
     },
     "Read Prompt File": {
       "main": [[{ "node": "Mark as Researched", "type": "main", "index": 0 }]]

@@ -13,6 +13,10 @@ venv/
 
 # Pipeline state
 send_log.json
+progress.json
+
+# Drafts (contain personal emails)
+drafts/
 
 # IDE
 .vscode/

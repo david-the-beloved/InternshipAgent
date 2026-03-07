@@ -77,7 +77,7 @@ SEND_LOG_FILE = ROOT / "send_log.json"  # tracks daily sends + all recipients
 def load_progress() -> dict:
     """Load progress tracker. Tracks which companies are done."""
     if PROGRESS_FILE.exists():
-        with open(PROGRESS_FILE, "r", encoding="utf-8") as f:
+        with open(PROGRESS_FILE, "r", encoding="utf-8-sig") as f:
             return json.load(f)
     return {"completed": [], "researched": [], "current": None}
 
@@ -113,7 +113,7 @@ def load_send_log() -> dict:
     """Load send log tracking daily counts and all-time recipients."""
     if SEND_LOG_FILE.exists():
         try:
-            with open(SEND_LOG_FILE, "r", encoding="utf-8") as f:
+            with open(SEND_LOG_FILE, "r", encoding="utf-8-sig") as f:
                 return json.load(f)
         except (json.JSONDecodeError, OSError):
             pass
@@ -205,14 +205,14 @@ def show_status():
 def load_profile() -> dict:
     """Load applicant profile."""
     path = KNOWLEDGE_DIR / "my_profile.json"
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8-sig") as f:
         return json.load(f)
 
 
 def load_companies() -> list[dict]:
     """Load all target companies."""
     path = KNOWLEDGE_DIR / "target_companies.json"
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8-sig") as f:
         return json.load(f).get("companies", [])
 
 

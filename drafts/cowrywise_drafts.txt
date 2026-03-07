@@ -1,4 +1,0 @@
-# Paste Gemini Pro's reply below this line.
-# It should contain ---EMAIL--- blocks.
-# Then run: python pipeline.py send --company Cowrywise
-
